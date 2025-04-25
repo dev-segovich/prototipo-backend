@@ -5,11 +5,12 @@ import json
 
 app = Flask(__name__)
 
-# ✅ Configuración de CORS específica para el frontend
-CORS(app, resources={r"/*": {"origins": "https://prototipojesus.zerotoplan.com"}})
-
-# Opcional mientras pruebas: permitir todo
-# CORS(app, resources={r"/*": {"origins": "*"}})
+# Configura CORS globalmente
+CORS(app, supports_credentials=True, resources={r"/*": {
+    "origins": "https://prototipojesus.zerotoplan.com",
+    "methods": ["GET", "POST", "OPTIONS"],
+    "allow_headers": ["Content-Type"]
+}})
 
 EMBEDDINGS_DIR = "embeddings"
 os.makedirs(EMBEDDINGS_DIR, exist_ok=True)
