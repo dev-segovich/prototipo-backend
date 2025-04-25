@@ -4,11 +4,16 @@ import os
 import json
 
 app = Flask(__name__)
-CORS(app)
+CORS(app,  origins="*")
 
 # Carpeta donde se guardarán los archivos
 EMBEDDINGS_DIR = "embeddings"
 os.makedirs(EMBEDDINGS_DIR, exist_ok=True)
+
+
+@app.route("/")
+def index():
+    return "¡Backend Flask corriendo en Render!"
 
 @app.route("/guardar_registro", methods=["POST"])
 def guardar_registro():
