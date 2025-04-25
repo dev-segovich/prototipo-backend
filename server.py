@@ -21,6 +21,11 @@ def index():
 
 @app.route("/guardar_registro", methods=["POST", "OPTIONS"])
 def guardar_registro():
+    # 🛡️ Manejo manual del preflight (OPTIONS)
+    if request.method == "OPTIONS":
+        return '', 200
+
+    # 👇 Aquí empieza el flujo real del POST
     data = request.json
 
     nombre = data.get("nombre")
@@ -41,6 +46,7 @@ def guardar_registro():
         json.dump(contenido, f, indent=4)
 
     return jsonify({"mensaje": "Registro guardado exitosamente"}), 200
+
 
 @app.route("/obtener_registros", methods=["GET"])
 def obtener_registros():
