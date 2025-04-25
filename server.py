@@ -4,18 +4,21 @@ import os
 import json
 
 app = Flask(__name__)
-CORS(app,  origins="*")
 
-# Carpeta donde se guardarán los archivos
+# ✅ Configuración de CORS específica para el frontend
+CORS(app, resources={r"/*": {"origins": "https://prototipojesus.zerotoplan.com"}})
+
+# Opcional mientras pruebas: permitir todo
+# CORS(app, resources={r"/*": {"origins": "*"}})
+
 EMBEDDINGS_DIR = "embeddings"
 os.makedirs(EMBEDDINGS_DIR, exist_ok=True)
 
-
 @app.route("/")
 def index():
-    return "¡Backend Flask corriendo en Render!"
+    return "Servidor activo desde Render 🚀"
 
-@app.route("/guardar_registro", methods=["POST"])
+@app.route("/guardar_registro", methods=["POST", "OPTIONS"])
 def guardar_registro():
     data = request.json
 
@@ -26,17 +29,13 @@ def guardar_registro():
     if not nombre or not cedula or not embedding:
         return jsonify({"error": "Faltan campos requeridos"}), 400
 
-    # Ruta del archivo por cédula
     path = os.path.join(EMBEDDINGS_DIR, f"{cedula}.json")
-
-    # Estructura que se guarda
     contenido = {
         "nombre": nombre,
         "identificacion": cedula,
         "embedding": embedding
     }
 
-    # Guardar como JSON
     with open(path, "w") as f:
         json.dump(contenido, f, indent=4)
 
@@ -52,11 +51,3 @@ def obtener_registros():
                 data = json.load(f)
                 registros.append(data)
     return jsonify(registros), 200
-
-
-if __name__ == "__main__":
-    app.run(
-        debug=True
-    )
-
-
